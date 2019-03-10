@@ -10,24 +10,20 @@ int main() {
         int N=0 , Q=0 ;
         cin >> N >> Q ;
         int x[N];
-        int queries[Q];
-        for (int i = 0; i < N; ++i) {
-            cin >> x[i] ;
-        }
-
-        for (int i = 0; i < Q ; ++i) {
-            cin >> queries[i] ;
-            int maxNum = 0;
-            if(queries[i] == 0) cout << 0 << endl;
-            else {
-                for (int j = 0; j < N; ++j) {
-                    int k = queries[i] & x[j];
-                    if (k >= maxNum) {
-                        maxNum = k;
-                    }
-                }
-                cout << maxNum << endl;
+        for (int i = 0; i < N; ++i) cin >> x[i] ;
+        while(Q--) {
+            int qur = 0;
+            cin >> qur ;
+            if(qur == 0){
+                cout << 0 << endl;
+                continue;
             }
+            int k = qur & x[0] ;
+            for (int i = 1; i < N ; ++i) {
+                if(k == x[i]) break;
+                k = max(k , qur & x[i]) ;
+            }
+            cout << k << endl;
         }
     }
     return 0;
