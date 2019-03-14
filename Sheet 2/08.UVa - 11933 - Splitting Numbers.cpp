@@ -1,4 +1,3 @@
-#include <iostream>
 #include <bits/stdc++.h>
 using namespace std;
 
@@ -10,20 +9,20 @@ string binaryRepresentation(int num) {
     }
     return str;
 }
-
 int toInteger( string str ){
     int num = 0;
     for (int i = 0; i < str.size() ; ++i) {
         if(str[i] == '1'){
-            num += 1 * pow(2,i);
+            num += pow(2,i);
         }
     }
     return num ;
 }
 
 int main() {
-	int num = 0;
-	while(cin >> num){
+  int num = 0;
+  cin >> num;
+	while(num){
 		string a ;
 		string b ;
 		string n = binaryRepresentation(num);
@@ -34,7 +33,7 @@ int main() {
 				b += '0' ;
 				x = 2;
 			}
-			else if(x==2 && n[i]== '1' ){
+			else if(x==2 && n[i] == '1' ){
 				b += n[i];
 				a += '0' ;
 				x = 1;
@@ -45,6 +44,8 @@ int main() {
 			}
 		}
 		cout << toInteger(a) << " " << toInteger(b) << endl;
+
+    cin >> num;
 	}
 	return 0;
 }
