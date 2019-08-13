@@ -23,7 +23,7 @@ int main() {
     cin.tie(NULL);
 
     int n,f=0,s=0;
-    int a[100005] ,b[10005];
+    int a[100005] ,b[100005];
     cin >> n;
     REP(i,n){
         cin >> a[i];
