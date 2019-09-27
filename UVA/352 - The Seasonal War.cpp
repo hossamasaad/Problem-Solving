@@ -2,13 +2,6 @@
  * Author : Hossam Asaad
  */
 #include <bits/stdc++.h>
-#include <iostream>
-#include <algorithm>
-#include <string>
-#include <math.h>
-#include <stdio.h>
-#include <string.h>
-#include <stdlib.h>
 
 #define ll long long
 #define DEBUG(x) cout << '>' << #x << ':' << x << endl;
@@ -18,32 +11,19 @@
 
 using namespace std;
 
-void visitAround(int i , int j , char graph[30][30] , bool visited[30][30]){
-   visited[i][j] = true ;
+char graph[30][30];
+bool visited[30][30];
 
-   if(graph[i+1][j]=='1' && !visited[i+1][j] ) visitAround(i+1,j,graph,visited);
-   else visited[i+1][j] ;
+void visitAround(int i , int j){
+    visited[i][j] = true ;
 
-   if(graph[i-1][j]=='1' && !visited[i-1][j] ) visitAround(i-1,j,graph,visited);
-   else visited[i-1][j] ;
+    FOR(dx,-1,1)FOR(dy,-1,1)
+    {
+        if( i==0 && j==0 ) continue;
+        if(graph[i+dx][j+dy]=='1' && !visited[i+dx][j+dy] ) visitAround(i+dx,j+dy);
+        else visited[i+dx][j+dy] = true;
+    }
 
-   if(graph[i][j-1]=='1' && !visited[i][j-1] ) visitAround(i,j-1,graph,visited);
-   else visited[i][j-1] ;
-
-   if(graph[i][j+1]=='1' && !visited[i][j+1] ) visitAround(i,j+1,graph,visited);
-   else visited[i][j+1] ;
-
-   if(graph[i-1][j-1]=='1' && !visited[i-1][j-1] ) visitAround(i-1,j-1,graph,visited);
-   else visited[i-1][j-1] ;
-
-   if(graph[i+1][j-1]=='1' && !visited[i+1][j-1] ) visitAround(i+1,j-1,graph,visited);
-   else visited[i+1][j-1] ;
-
-   if(graph[i-1][j+1]=='1' && !visited[i-1][j+1] ) visitAround(i-1,j+1,graph,visited);
-   else visited[i-1][j+1] ;
-
-   if(graph[i+1][j+1]=='1' && !visited[i+1][j+1] ) visitAround(i+1,j+1,graph,visited);
-   else visited[i+1][j+1] ;
 }
 int main() {
     ios_base::sync_with_stdio(false);
@@ -53,21 +33,21 @@ int main() {
     while(cin >> n){
         ctr++;
         int eagles = 0 ;
-        char graph[30][30];
-        bool visited[30][30];
-        REP(i,n+1)REP(j,n+1){
-            cin >> graph[i][j] ;
-            visited[i][j] = false;
-        }
+        
+        memset(graph,0,sizeof(graph));
+        memset(visited,false,sizeof(visited));
+
+        REP(i,n+1)REP(j,n+1) cin >> graph[i][j];
 
         REP(i,n+1){
             REP(j,n+1){
                 if(graph[i][j]=='1' && !visited[i][j]){
-                    visitAround(i,j,graph,visited);
+                    visitAround(i,j);
                     eagles++;
                 }
             }
         }
+
         cout<<"Image number "<<ctr<<" contains "<<eagles<<" war eagles."<<endl;
     }
     return 0;
