@@ -1,14 +1,4 @@
-/*
- * Author : Hossam Asaad
- */
 #include <bits/stdc++.h>
-#include <iostream>
-#include <algorithm>
-#include <string>
-#include <math.h>
-#include <stdio.h>
-#include <string.h>
-#include <stdlib.h>
 
 #define ll long long
 #define DEBUG(x) cout << '>' << #x << ':' << x << endl;
@@ -18,46 +8,62 @@
 
 using namespace std;
 
-vector<int> graph[105];
-bool used[105];
-int cnt1=0, cnt2=0;
+vector<int> v[105];
+int colored[105];
 
-void dfs(int x){
-    used[x] = true ;
-    cnt1 += graph[x].size();
-    cnt2++;
+int bfs(int s)
+{
+    queue<int> q; q.push(s);
+    colored[s] = 0;
+    int ctr = 0;
 
-    for(int i=0; i<graph[x].size(); i++){
-        if(!used[ graph[x][i] ]) dfs( graph[x][i] ) ;
-    }
+    while(!q.empty())
+    {
+        int u = q.front(); q.pop();
+        int len = v[u].size();
+        REP(i,len)
+        {
+            if( colored[ v[u][i] ] == -1 )
+            {
+                if(colored[u]==1) colored[ v[u][i] ] = 0;
+                else colored[ v[u][i] ] = 1;
+                q.push(v[u][i]);
+            }
+            else if( colored[ v[u][i] ] == colored[u] )
+            {
+                return 1;
+            }
+        }
+    }   
+    return 0;
 }
-
 int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
 
-    int n, m;
+    int n,m,a,b,s;
     cin >> n >> m;
-    memset(used , false , sizeof(used) );
+    
+    memset(colored,-1,sizeof(colored));
 
-    int x, y;
-    for(int i=0 ; i<m ; i++){
-        cin >> x >> y ;
-        graph[x].push_back(y);
-        graph[y].push_back(x);
+    REP(i,m)
+    {
+        cin >> a >> b;
+        s = a;
+        v[a].push_back(b);
+        v[b].push_back(a);
     }
 
-    int stop = 0;
-    for(int i=1 ; i<=n ; i++){
-        if(!used[i]){
-            cnt1 = 0;
-            cnt2 = 0;
-            dfs(i);
-            if(cnt2%2==1 && cnt2*2==cnt1){
-                stop++;
-            }
+    int ctr = 0;
+    FOR(i,1,n)
+    {
+        if(colored[i] == -1)
+        {
+            ctr += bfs(i);
         }
     }
-    cout << stop + (n-stop)%2 ;
+
+    if( (n%2 == 0 && ctr%2 == 0 && ctr != 1) || (n%2 == 1 && ctr%2 == 1)  ) cout << ctr;
+    else cout << ctr+1;
     return 0;
 }
