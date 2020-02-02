@@ -1,90 +1,89 @@
-/*
- * Author : Hossam Asaad
- */
 #include <bits/stdc++.h>
-#include <iostream>
-#include <algorithm>
-#include <string>
-#include <math.h>
-#include <stdio.h>
-#include <string.h>
-#include <stdlib.h>
-
-#define ll long long
-#define DEBUG(x) cout << '>' << #x << ':' << x << endl;
-#define REP(i,n) for(int i=1;i<(n);i++)
-#define FOR(i,a,b) for(int i=(a);i<=(b);i++)
-#define FORD(i,a,b) for(int i=(a);i>=(b);i--)
 
 using namespace std;
 
-vector<string> searchPath(int i,int j,char graph[10][10],vector<string> path,bool visited[10][10]){
+char graph[1000][1000];
+bool visited[1000][1000];
+vector<string> path;
+int n,m;
+int x,y;
+int way = 0;
+int dx[3] = {0,0,-1};
+int dy[3] = {-1,1,0};
 
-    visited[i][j] = true ;
-    char right=' ' , left=' '  , forth=' '  ;
-    if(!visited[i][j+1]) right = graph[i][j+1];
-    if(!visited[i][j-1]) left  = graph[i][j-1];
-    if(!visited[i-1][j]) forth = graph[i-1][j];
 
-    if(right == '#'){
-        path.push_back("right");
-        return path;
-    }
-    else if(right == 'I'||right == 'E'||right == 'H'||right == 'O'||right == 'V'||right == 'A'){
-        path.push_back("right");
-        path = searchPath(i,j+1,graph,path,visited);
-    }
-
-    else if(left == '#'){
-        path.push_back("left");
-        return path;
-    }
-    else if(left == 'I'||left == 'E'||left == 'H'||left == 'O'||left == 'V'||left == 'A'){
-        path.push_back("left");
-        path = searchPath(i,j-1,graph,path,visited);
-    }
-
-    else if(forth == '#'){
-        path.push_back("forth");
-        return path;
-    }
-    else if(forth == 'I'||forth == 'E'||forth == 'H'||forth == 'O'||forth == 'V'||forth == 'A'){
-        path.push_back("forth");
-        path = searchPath(i-1,j,graph,path,visited);
-    }
-
-    return path ;
-}
-int main() {
-    ios_base::sync_with_stdio(false);
-    cin.tie(NULL);
-    int t;
-    cin >> t;
-
-    while(t--){
-
-        int n,m,x,y;
-        char graph[10][10];
-        bool visited[10][10];
-        vector<string> path,result;
-
-        cin >> n >> m;
-        REP(i,n+1)REP(j,m+1){
+void input()
+{  
+    for(int i=0;i<n;i++)
+    {
+        for(int j=0;j<m;j++)
+        {
             cin >> graph[i][j];
-            visited[i][j]=false;
-            if(graph[i][j]=='@'){
-                x=i;
-                y=j;
+            if(graph[i][j]=='@')
+            {
+                x = i;
+                y = j;
             }
         }
+    }
+}
 
-        result = searchPath(x,y,graph,path,visited);
-        cout << result[0];
-        for (int i = 1; i < result.size(); ++i)
-            cout << ' ' << result[i];
-        cout << '\n';
-
+void dfs(int i,int j)
+{
+    if( i<0 || j<0 || i >= n || j >= m) return;
+    if(visited[i][j]) return;
+    
+    visited[i][j] = true;
+    way++;
+    
+    if(way < 7)
+    {
+        for(int k=0;k<3;k++)
+        {
+            if( (graph[i+dx[k]][j+dy[k]]=='I' || graph[i+dx[k]][j+dy[k]]=='H'   || graph[i+dx[k]][j+dy[k]]=='O' || graph[i+dx[k]][j+dy[k]]=='V'   || graph[i+dx[k]][j+dy[k]]=='A' || graph[i+dx[k]][j+dy[k]]=='E')
+                && !visited[i+dx[k]][j+dy[k]] )
+            {
+                if(k==0) path.push_back("left");
+                else if(k==1) path.push_back("right");
+                else if(k==2) path.push_back("forth");
+                dfs(i+dx[k], j+dy[k]);
+                break;
+            }
+        }
+    }else{
+        for(int k=0;k<3;k++)
+        {
+            if( graph[i+dx[k]][j+dy[k]]=='#' )
+            {
+                if(k==0) path.push_back("left");
+                else if(k==1) path.push_back("right");
+                else if(k==2) path.push_back("forth");
+                break;
+            }
+        }
     }
 
-    return 0;
+}
+
+int main() {
+    int t;
+    cin >> t;
+    while(t--)
+    {
+        cin >> n >> m;
+        
+        way = 0;
+        path.clear();
+        memset(visited, false, sizeof(visited));
+        memset(graph, '.',sizeof(graph));
+
+        input();
+        dfs(x,y);
+
+        cout << path[0];
+        for(int i=1;i<path.size();i++){
+            cout << " " << path[i];
+        }
+        cout << endl;
+    }
 }
